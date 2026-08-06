@@ -1,20 +1,30 @@
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> freq(3,0);
-
-        for(int i=0;i<n;i++)
-        {
-            freq[nums[i]]++;
-        }
-
-        int index = 0; 
-        for(int color = 0; color < 3; color++) {
-            while(freq[color] > 0) {
-                nums[index] = color;
-                index++;
-                freq[color]--;
+        int low = 0;
+        int mid = 0;
+        int high = nums.size() - 1;
+        
+        // We stop when mid crosses high, meaning the unknown area is fully explored.
+        while (mid <= high) {
+            if (nums[mid] == 0) {
+                // Chuck 0s to the left boundary
+                swap(nums[low], nums[mid]);
+                low++;
+                mid++;
+            } 
+            else if (nums[mid] == 1) {
+                // 1s belong in the middle, just step over them
+                mid++;
+            } 
+            else { // nums[mid] == 2
+                // Chuck 2s to the right boundary
+                swap(nums[mid], nums[high]);
+                high--;
+                
+                // Notice we do NOT do mid++ here. 
+                // The number we just swapped from 'high' is still unknown, 
+                // so we must evaluate it on the next loop iteration.
             }
         }
     }
